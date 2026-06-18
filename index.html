@@ -673,7 +673,7 @@ const USERS=[
   {email:"anderson@strategicos.com.br",pw:"anderson123",name:"Anderson",role:"Parceiro",parceiro:"Somativa"},
   {email:"rafael@strategicos.com.br",pw:"rafael123",name:"Rafael",role:"Gestor",parceiro:""},
   {email:"admin@somativa.com.br",pw:"admin123",name:"Admin",role:"Administrador",parceiro:""},
-  {email:"beroaldo@somativa.com.br",pw:"Beroaldo",name:"Beroaldo",role:"Parceiro"},
+  {email:"beroaldo@somativa.com.br",pw:"Beroaldo",name:"Beroaldo",role:"Parceiro",parceiro:"Somativa"},
   {email:"aragao@aragao.com.br",pw:"aragao123",name:"Aragão Parceiros",role:"Parceiro",parceiro:"Aragão"},
   {email:"andressa.sales@somativa.com.br",pw:"andressa123",name:"Andressa",role:"Gestor",parceiro:"Somativa",hideComissao:true},
 ];
@@ -800,7 +800,10 @@ function reRender(){
 // Base rows filtered only by logged-in user's parceiro
 function baseRows(){
   let rows=RAW.rows;
-  if(CU&&CU.parceiro&&CU.role!=='Gestor')rows=rows.filter(r=>r.parceiro===CU.parceiro);
+  if(CU&&CU.parceiro&&CU.role!=='Gestor'){
+    if(CU.parceiro==='Aragão')rows=rows.filter(r=>r.parceiro==='Aragão');
+    else rows=rows.filter(r=>r.parceiro!=='Aragão');
+  }
   return rows;
 }
 // Dashboard/global: also apply topbar filters
@@ -909,10 +912,12 @@ const CLR=['#2F3D5C','#D3B274','#334669','#AE9563','#4A6FA5','#8B9DC3','#6B5344'
 // ── FILTERS ───────────────────────────────────
 function populateFilters(){
   const src=CU&&CU.parceiro?RAW.rows.filter(r=>r.parceiro===CU.parceiro):RAW.rows;
-  const parceiros=[...new Set(RAW.rows.map(r=>r.parceiro).filter(Boolean))].sort();
+  const _hasAragao=RAW.rows.some(r=>r.parceiro==='Aragão');
+  const parceiros=_hasAragao?['Somativa','Aragão']:['Somativa'];
   const statuses=[...new Set(RAW.rows.map(r=>r.status).filter(Boolean))].sort();
   const ufs=[...new Set(RAW.rows.map(r=>r.uf).filter(u=>u&&u!=='N/D'))].sort();
-  const hunters=[...new Set(RAW.rows.map(r=>r.hunter).filter(Boolean))].sort();
+  const _hunterSrc=CU&&CU.parceiro&&CU.role!=='Gestor'?(CU.parceiro==='Aragão'?RAW.rows.filter(r=>r.parceiro==='Aragão'):RAW.rows.filter(r=>r.parceiro!=='Aragão')):RAW.rows;
+  const hunters=[...new Set(_hunterSrc.map(r=>r.hunter).filter(Boolean))].sort();
   const PARC_IDS=['gf-parceiro','ef-parceiro','pf-parceiro','plf-parceiro'];
   const STAT_IDS=['gf-status','ef-status','pf-status','plf-status'];
   PARC_IDS.forEach(id=>{
@@ -1058,7 +1063,7 @@ function renderEmpresas(){
   console.log('[renderEmpresas] ep='+ep+' es='+es+' euf='+euf+' search='+search);
   let rows=baseRows();
   console.log('[renderEmpresas] rows antes filtro: '+rows.length);
-  if(ep)rows=rows.filter(r=>r.parceiro===ep);
+  if(ep){if(ep==='Aragão')rows=rows.filter(r=>r.parceiro==='Aragão');else rows=rows.filter(r=>r.parceiro!=='Aragão');}
   if(es)rows=rows.filter(r=>(STATUS_NORM[r.status]||r.status)===es);
   if(euf)rows=rows.filter(r=>r.uf===euf);
   if(ehu)rows=rows.filter(r=>r.hunter===ehu);
