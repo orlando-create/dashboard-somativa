@@ -392,7 +392,7 @@ input,select{font-family:inherit}
     <div class="chart-card">
       <div class="chart-header"><div><div class="chart-title">Top Empresas por Crédito</div><div class="chart-sub">Maior base identificada</div></div></div>
       <div class="tbl-wrap">
-        <table class="data-table"><thead><tr><th>#</th><th>Empresa</th><th>Parceiro</th><th class="num">Crédito</th><th>Fase</th></tr></thead><tbody id="tbl-top-emps"></tbody></table>
+        <table class="data-table"><thead><tr><th>#</th><th>Empresa</th><th>Parceiro</th><th class="num">Crédito</th></tr></thead><tbody id="tbl-top-emps"></tbody></table>
       </div>
     </div>
   </div>
@@ -1021,7 +1021,7 @@ function renderDashboard(){
   'Resultado':'Finalizar resultado',
 };
   const tb=S('tbl-top-emps');
-  if(tb){tb.innerHTML='';d.emps.slice(0,10).forEach((e,i)=>{const st=compStage(e.status);tb.innerHTML+=`<tr style="cursor:pointer" onclick="openDrawer('${e.label.replace(/'/g,"\\'")}')"><td><b>${i+1}</b></td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.label}">${e.label}</td><td><span class="tag-p">${e.parceiro}</span></td><td class="num">${fmtK(e.credito)}</td><td><span class="badge blue" style="background:${st.color}22;color:${st.color}">${st.name}</span></td></tr>`;});}
+  if(tb){tb.innerHTML='';d.emps.slice(0,10).forEach((e,i)=>{tb.innerHTML+=`<tr style="cursor:pointer" onclick="openDrawer('${e.label.replace(/'/g,"\\'")}')"><td><b>${i+1}</b></td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.label}">${e.label}</td><td><span class="tag-p">${e.parceiro}</span></td><td class="num">${fmtK(e.credito)}</td></tr>`;});}
   const acEl=S('acoes-list');
   if(acEl){
     const prioEmps=d.emps.filter(e=>e.status.includes('Reunião Resultado')).sort((a,b)=>b.credito-a.credito);
